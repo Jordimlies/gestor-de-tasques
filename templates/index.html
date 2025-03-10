@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestió de Tasques</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>Tasques</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Inici</a></li>
+                    <li><a href="/afegir_tasca">Afegir Tasca</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main>
+            <h2>Tasques Pendents</h2>
+            <div class="tasques-container">
+                <div class="tasques-prioritat alta" id="alta-prioritat">
+                    <h3>Alta Prioritat</h3>
+                    {% for tasca in tasques if tasca.prioritat == 'alta' %}
+                        <div class="tasca {% if tasca.completada %}completada{% endif %}" data-id="{{ tasca.id }}">
+                            <div class="tasca-header">
+                                <h4>{{ tasca.nom }}</h4>
+                                <div class="tasca-buttons">
+                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id, prioritat='alta') }}" method="POST">
+                                        <button type="submit" class="btn btn-completar">
+                                            {% if tasca.completada %}
+                                                ✔
+                                            {% else %}
+                                                ✓
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id, prioritat='alta') }}" class="btn btn-edit">✎</a>
+                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id, prioritat='alta') }}" method="POST">
+                                        <button type="submit" class="btn btn-delete">✖</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p>{{ tasca.descripcio }}</p>
+                            <p><strong>Prioritat:</strong> {{ tasca.prioritat }}</p>
+                            <p><strong>Estat:</strong> {% if tasca.completada %}Completada{% else %}Pendent{% endif %}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.data_finalitzacio }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="tasques-prioritat baixa" id="baixa-prioritat">
+                    <h3>Baixa Prioritat</h3>
+                    {% for tasca in tasques if tasca.prioritat == 'baixa' %}
+                        <div class="tasca {% if tasca.completada %}completada{% endif %}" data-id="{{ tasca.id }}">
+                            <div class="tasca-header">
+                                <h4>{{ tasca.nom }}</h4>
+                                <div class="tasca-buttons">
+                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id, prioritat='baixa') }}" method="POST">
+                                        <button type="submit" class="btn btn-completar">
+                                            {% if tasca.completada %}
+                                                ✔
+                                            {% else %}
+                                                ✓
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id, prioritat='baixa') }}" class="btn btn-edit">✎</a>
+                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id, prioritat='baixa') }}" method="POST">
+                                        <button type="submit" class="btn btn-delete">✖</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p>{{ tasca.descripcio }}</p>
+                            <p><strong>Prioritat:</strong> {{ tasca.prioritat }}</p>
+                            <p><strong>Estat:</strong> {% if tasca.completada %}Completada{% else %}Pendent{% endif %}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.data_finalitzacio }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 Grup 3</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

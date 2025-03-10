@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tasca</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+            </div>
+            <nav>
+            </nav>
+        </header>
+        
+        <main>
+            <h2>Editar Tasca</h2>
+            <form action="{{ url_for('routes.editar_tasca', id=tasca.id, prioritat=tasca.prioritat) }}" method="POST">
+                <div class="form-group">
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" value="{{ tasca.nom }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="descripcio">Descripció:</label>
+                    <textarea id="descripcio" name="descripcio" required>{{ tasca.descripcio }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tipus">Prioritat:</label>
+                    <select id="tipus" name="tipus" required>
+                        <option value="alta" {% if tasca.prioritat == 'alta' %}selected{% endif %}>Alta</option>
+                        <option value="baixa" {% if tasca.prioritat == 'baixa' %}selected{% endif %}>Baixa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="data_finalitzacio">Data de finalització:</label>
+                    <input type="date" id="data_finalitzacio" name="data_finalitzacio" value="{{ tasca.data_finalitzacio }}" required>
+                </div>
+                <button type="submit" class="btn btn-submit">Guardar Canvis</button>
+            </form>
+        </main>
+
+        <footer>
+        </footer>
+    </div>
+</body>
+</html>
