@@ -6,6 +6,50 @@
     <title>Gestió de Tasques</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var altaPrioritat = document.getElementById('alta-prioritat');
+            var baixaPrioritat = document.getElementById('baixa-prioritat');
+
+            new Sortable(altaPrioritat, {
+                animation: 150,
+                onEnd: function (evt) {
+                    updateTaskOrder('alta');
+                }
+            });
+
+            new Sortable(baixaPrioritat, {
+                animation: 150,
+                onEnd: function (evt) {
+                    updateTaskOrder('baixa');
+                }
+            });
+
+            function updateTaskOrder(priority) {
+                var order = [];
+                var tasks = document.querySelectorAll('#' + priority + '-prioritat .tasca');
+                tasks.forEach(function (task, index) {
+                    order.push({
+                        id: task.getAttribute('data-id'),
+                        ordre: index + 1
+                    });
+                });
+
+                fetch('/update_task_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ order: order })
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          console.log('Order updated successfully');
+                      }
+                  });
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -17,6 +61,7 @@
                 <ul>
                     <li><a href="/">Inici</a></li>
                     <li><a href="/afegir_tasca">Afegir Tasca</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
             </nav>
         </header>
@@ -26,60 +71,60 @@
             <div class="tasques-container">
                 <div class="tasques-prioritat alta" id="alta-prioritat">
                     <h3>Alta Prioritat</h3>
-                    {% for tasca in tasques if tasca.prioritat == 'alta' %}
-                        <div class="tasca {% if tasca.completada %}completada{% endif %}" data-id="{{ tasca.id }}">
+                    {% for tasca in tasks if tasca.priority == 'alta' %}
+                        <div class="tasca {% if tasca.completed %}completada{% endif %}" data-id="{{ tasca.id }}">
                             <div class="tasca-header">
-                                <h4>{{ tasca.nom }}</h4>
+                                <h4>{{ tasca.name }}</h4>
                                 <div class="tasca-buttons">
-                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id, prioritat='alta') }}" method="POST">
+                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id) }}" method="POST">
                                         <button type="submit" class="btn btn-completar">
-                                            {% if tasca.completada %}
+                                            {% if tasca.completed %}
                                                 ✔
                                             {% else %}
                                                 ✓
                                             {% endif %}
                                         </button>
                                     </form>
-                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id, prioritat='alta') }}" class="btn btn-edit">✎</a>
-                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id, prioritat='alta') }}" method="POST">
+                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id) }}" class="btn btn-edit">✎</a>
+                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id) }}" method="POST">
                                         <button type="submit" class="btn btn-delete">✖</button>
                                     </form>
                                 </div>
                             </div>
-                            <p>{{ tasca.descripcio }}</p>
-                            <p><strong>Prioritat:</strong> {{ tasca.prioritat }}</p>
-                            <p><strong>Estat:</strong> {% if tasca.completada %}Completada{% else %}Pendent{% endif %}</p>
-                            <p><strong>Data de finalització:</strong> {{ tasca.data_finalitzacio }}</p>
+                            <p>{{ tasca.description }}</p>
+                            <p><strong>Prioritat:</strong> {{ tasca.priority }}</p>
+                            <p><strong>Estat:</strong> {% if tasca.completed %}Completada{% else %}Pendent{% endif %}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }}</p>
                         </div>
                     {% endfor %}
                 </div>
 
                 <div class="tasques-prioritat baixa" id="baixa-prioritat">
                     <h3>Baixa Prioritat</h3>
-                    {% for tasca in tasques if tasca.prioritat == 'baixa' %}
-                        <div class="tasca {% if tasca.completada %}completada{% endif %}" data-id="{{ tasca.id }}">
+                    {% for tasca in tasks if tasca.priority == 'baixa' %}
+                        <div class="tasca {% if tasca.completed %}completada{% endif %}" data-id="{{ tasca.id }}">
                             <div class="tasca-header">
-                                <h4>{{ tasca.nom }}</h4>
+                                <h4>{{ tasca.name }}</h4>
                                 <div class="tasca-buttons">
-                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id, prioritat='baixa') }}" method="POST">
+                                    <form action="{{ url_for('routes.completar_tasca', id=tasca.id) }}" method="POST">
                                         <button type="submit" class="btn btn-completar">
-                                            {% if tasca.completada %}
+                                            {% if tasca.completed %}
                                                 ✔
                                             {% else %}
                                                 ✓
                                             {% endif %}
                                         </button>
                                     </form>
-                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id, prioritat='baixa') }}" class="btn btn-edit">✎</a>
-                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id, prioritat='baixa') }}" method="POST">
+                                    <a href="{{ url_for('routes.editar_tasca', id=tasca.id) }}" class="btn btn-edit">✎</a>
+                                    <form action="{{ url_for('routes.eliminar_tasca', id=tasca.id) }}" method="POST">
                                         <button type="submit" class="btn btn-delete">✖</button>
                                     </form>
                                 </div>
                             </div>
-                            <p>{{ tasca.descripcio }}</p>
-                            <p><strong>Prioritat:</strong> {{ tasca.prioritat }}</p>
-                            <p><strong>Estat:</strong> {% if tasca.completada %}Completada{% else %}Pendent{% endif %}</p>
-                            <p><strong>Data de finalització:</strong> {{ tasca.data_finalitzacio }}</p>
+                            <p>{{ tasca.description }}</p>
+                            <p><strong>Prioritat:</strong> {{ tasca.priority }}</p>
+                            <p><strong>Estat:</strong> {% if tasca.completed %}Completada{% else %}Pendent{% endif %}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }}</p>
                         </div>
                     {% endfor %}
                 </div>

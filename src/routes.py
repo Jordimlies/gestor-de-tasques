@@ -1,131 +1,147 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from src.tasques import PrioritatAlta, PrioritatBaixa, carregar_tasques, desar_tasques, guardar_tasques
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+from src.usuari import User, Task
+import uuid
 
 routes = Blueprint('routes', __name__)
 
+USERS_FILE = 'data/users.json'
+TASKS_FILE = 'data/tasks.json'
+
 @routes.route('/')
 def index():
-    tasques_alta = carregar_tasques('prioritat_alta')
-    tasques_baixa = carregar_tasques('prioritat_baixa')
-    tasques = tasques_alta + tasques_baixa
-    return render_template('index.html', tasques=tasques)
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
+    username = session['username']
+    tasks = Task.load_tasks(TASKS_FILE)
+    user_tasks = [task for task in tasks if task.username == username]
+    user_tasks.sort(key=lambda x: x.ordre)
+    return render_template('index.html', username=username, tasks=user_tasks)
+
+@routes.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            flash('Passwords do not match!', 'danger')
+            return redirect(url_for('routes.register'))
+
+        users = User.load_users(USERS_FILE)
+        if any(user.username == username for user in users):
+            flash('Username already exists!', 'danger')
+            return redirect(url_for('routes.register'))
+
+        new_user = User(username, password)
+        users.append(new_user)
+        User.save_users(USERS_FILE, users)
+        flash('Registration successful!', 'success')
+        return redirect(url_for('routes.login'))
+
+    return render_template('register.html')
+
+@routes.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        users = User.load_users(USERS_FILE)
+        user = next((user for user in users if user.username == username and user.password == password), None)
+
+        if user is None:
+            flash('Invalid username or password!', 'danger')
+            return redirect(url_for('routes.login'))
+
+        session['username'] = user.username
+        return redirect(url_for('routes.index'))
+
+    return render_template('login.html')
+
+@routes.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('routes.login'))
 
 @routes.route('/afegir_tasca', methods=['GET', 'POST'])
 def afegir_tasca():
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
     if request.method == 'POST':
-        nom = request.form['nom']
-        descripcio = request.form['descripcio']
-        tipus = request.form['tipus']
-        data_finalitzacio = request.form['data_finalitzacio']
+        name = request.form['nom']
+        description = request.form['descripcio']
+        priority = request.form['tipus']
+        due_date = request.form['data_finalitzacio']
+        username = session['username']
 
-        if tipus == 'alta':
-            tasques = carregar_tasques('prioritat_alta')
-            nova_tasca = PrioritatAlta(len(tasques) + 1, nom, descripcio, 'alta', data_finalitzacio=data_finalitzacio)
-            tasques.append(nova_tasca)
-            for index, tasca in enumerate(tasques):
-                tasca.id = index + 1
-            desar_tasques(tasques, 'prioritat_alta')
-        else:
-            tasques = carregar_tasques('prioritat_baixa')
-            nova_tasca = PrioritatBaixa(len(tasques) + 1, nom, descripcio, 'baixa', data_finalitzacio=data_finalitzacio)
-            tasques.append(nova_tasca)
-            for index, tasca in enumerate(tasques):
-                tasca.id = index + 1
-            desar_tasques(tasques, 'prioritat_baixa')
-
+        tasks = Task.load_tasks(TASKS_FILE)
+        ordre = len(tasks) + 1
+        new_task = Task(str(uuid.uuid4()), name, description, priority, due_date, username, ordre)
+        tasks.append(new_task)
+        Task.save_tasks(TASKS_FILE, tasks)
         return redirect(url_for('routes.index'))
 
     return render_template('afegir_tasca.html')
 
-@routes.route('/editar/<int:id>/<prioritat>', methods=['GET', 'POST'])
-def editar_tasca(id, prioritat):
-    if prioritat == 'alta':
-        tasques = carregar_tasques('prioritat_alta')
-    else:
-        tasques = carregar_tasques('prioritat_baixa')
-
-    tasca = next((t for t in tasques if t.id == id), None)
-
-    if request.method == 'POST' and tasca:
-        tasca.nom = request.form['nom']
-        tasca.descripcio = request.form['descripcio']
-        nova_prioritat = request.form['tipus']
-        tasca.data_finalitzacio = request.form['data_finalitzacio']
-
-        if prioritat != nova_prioritat:
-            # Eliminar la tasca de la llista original
-            tasques = [t for t in tasques if t.id != id]
-            desar_tasques(tasques, f'prioritat_{prioritat}')
-
-            # Afegir la tasca a la nova llista
-            if nova_prioritat == 'alta':
-                noves_tasques = carregar_tasques('prioritat_alta')
-                nova_tasca = PrioritatAlta(len(noves_tasques) + 1, tasca.nom, tasca.descripcio, 'alta', tasca.completada, tasca.data_finalitzacio)
-                noves_tasques.append(nova_tasca)
-                desar_tasques(noves_tasques, 'prioritat_alta')
-            else:
-                noves_tasques = carregar_tasques('prioritat_baixa')
-                nova_tasca = PrioritatBaixa(len(noves_tasques) + 1, tasca.nom, tasca.descripcio, 'baixa', tasca.completada, tasca.data_finalitzacio)
-                noves_tasques.append(nova_tasca)
-                desar_tasques(noves_tasques, 'prioritat_baixa')
-        else:
-            desar_tasques(tasques, f'prioritat_{prioritat}')
-
+@routes.route('/editar_tasca/<id>', methods=['GET', 'POST'])
+def editar_tasca(id):
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
+    tasks = Task.load_tasks(TASKS_FILE)
+    task = next((task for task in tasks if task.id == id and task.username == session['username']), None)
+    if task is None:
+        flash('Task not found or you do not have permission to edit it.', 'danger')
         return redirect(url_for('routes.index'))
 
-    return render_template('editar_tasca.html', tasca=tasca)
+    if request.method == 'POST':
+        task.name = request.form['nom']
+        task.description = request.form['descripcio']
+        task.priority = request.form['tipus']
+        task.due_date = request.form['data_finalitzacio']
+        Task.save_tasks(TASKS_FILE, tasks)
+        return redirect(url_for('routes.index'))
 
-@routes.route('/eliminar/<int:id>/<prioritat>', methods=['POST'])
-def eliminar_tasca(id, prioritat):
-    if prioritat == 'alta':
-        tasques = carregar_tasques('prioritat_alta')
-    else:
-        tasques = carregar_tasques('prioritat_baixa')
+    return render_template('editar_tasca.html', task=task)
 
-    tasques = [t for t in tasques if t.id != id]
+@routes.route('/eliminar_tasca/<id>', methods=['POST'])
+def eliminar_tasca(id):
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
+    tasks = Task.load_tasks(TASKS_FILE)
+    task = next((task for task in tasks if task.id == id and task.username == session['username']), None)
+    if task is None:
+        flash('Task not found or you do not have permission to delete it.', 'danger')
+        return redirect(url_for('routes.index'))
 
-    for index, tasca in enumerate(tasques):
-        tasca.id = index + 1
-
-    desar_tasques(tasques, f'prioritat_{prioritat}')
-
+    tasks.remove(task)
+    Task.save_tasks(TASKS_FILE, tasks)
     return redirect(url_for('routes.index'))
 
-@routes.route('/completar_tasca/<int:id>/<prioritat>', methods=['POST'])
-def completar_tasca(id, prioritat):
-    if prioritat == 'alta':
-        tasques = carregar_tasques('prioritat_alta')
-    else:
-        tasques = carregar_tasques('prioritat_baixa')
+@routes.route('/completar_tasca/<id>', methods=['POST'])
+def completar_tasca(id):
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
+    tasks = Task.load_tasks(TASKS_FILE)
+    task = next((task for task in tasks if task.id == id and task.username == session['username']), None)
+    if task is None:
+        flash('Task not found or you do not have permission to complete it.', 'danger')
+        return redirect(url_for('routes.index'))
 
-    for tasca in tasques:
-        if tasca.id == id:
-            tasca.marcar_completada()
-            break
-
-    desar_tasques(tasques, f'prioritat_{prioritat}')
-
+    task.completed = not task.completed
+    Task.save_tasks(TASKS_FILE, tasks)
     return redirect(url_for('routes.index'))
 
 @routes.route('/update_task_order', methods=['POST'])
 def update_task_order():
+    if 'username' not in session:
+        return redirect(url_for('routes.login'))
     data = request.get_json()
-    prioritat = data['prioritat']
-    order = data['order']
-
-    if prioritat == 'alta':
-        tasques = carregar_tasques('prioritat_alta')
-    else:
-        tasques = carregar_tasques('prioritat_baixa')
-
-    tasques_dict = {tasca.id: tasca for tasca in tasques}
-    tasques_ordenades = []
-
-    for item in order:
-        tasca = tasques_dict[int(item['id'])]
-        tasca.id = item['new_order']
-        tasques_ordenades.append(tasca)
-
-    desar_tasques(tasques_ordenades, f'prioritat_{prioritat}')
-
-    return {'success': True}
+    tasks = Task.load_tasks(TASKS_FILE)
+    user_tasks = [task for task in tasks if task.username == session['username']]
+    for item in data['order']:
+        task = next((task for task in user_tasks if task.id == item['id']), None)
+        if task:
+            task.ordre = item['ordre']
+    Task.save_tasks(TASKS_FILE, tasks)
+    return jsonify({'success': True})
