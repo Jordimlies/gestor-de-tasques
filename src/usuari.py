@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 class User:
     def __init__(self, username, password):
@@ -68,3 +69,42 @@ class Task:
     def save_tasks(filepath, tasks):
         with open(filepath, 'w') as file:
             json.dump([task.to_dict() for task in tasks], file, indent=4)
+
+class PrioritatAlta(Task):
+    def __init__(self, id, name, description, priority, due_date, username, ordre, completed=False):
+        super().__init__(id, name, description, priority, due_date, username, ordre, completed)
+
+class PrioritatBaixa(Task):
+    def __init__(self, id, name, description, priority, due_date, username, ordre, completed=False):
+        super().__init__(id, name, description, priority, due_date, username, ordre, completed)
+
+def carregar_tasques(prioritat):
+    fitxer = f"data/{prioritat}.json"
+    if not os.path.exists(fitxer):
+        return []
+    try:
+        with open(fitxer, 'r', encoding='utf-8') as file:
+            tasques_data = json.load(file)
+        return [
+            PrioritatAlta(t['id'], t['name'], t['description'], t['priority'], t['due_date'], t['username'], t['ordre'], t['completed']) if t['priority'] == 'alta'
+            else PrioritatBaixa(t['id'], t['name'], t['description'], t['priority'], t['due_date'], t['username'], t['ordre'], t['completed'])
+            for t in tasques_data
+        ]
+    except (json.JSONDecodeError, FileNotFoundError) as e:
+        print(f"Error carregant les tasques {prioritat}: {e}")
+        return []
+
+def desar_tasques(tasques, prioritat):
+    if not os.path.exists('data'):
+        os.makedirs('data')
+    
+    fitxer = f"data/{prioritat}.json"
+    with open(fitxer, 'w', encoding='utf-8') as file:
+        json.dump([t.to_dict() for t in tasques], file, ensure_ascii=False, indent=4)
+
+def guardar_tasques(tasques):
+    tasques_alta = [t for t in tasques if t.priority == 'alta']
+    tasques_baixa = [t for t in tasques if t.priority == 'baixa']
+
+    desar_tasques(tasques_alta, 'prioritat_alta')
+    desar_tasques(tasques_baixa, 'prioritat_baixa')
