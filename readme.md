@@ -50,7 +50,7 @@ gestor-de-tasques/
 ├── src/
 │   ├── __init__.py
 │   ├── routes.py
-│   ├── tasques.py
+│   ├── usuari.py
 ├── static/
 │   ├── css/
 │   │   ├── afegir.css
