@@ -6,50 +6,7 @@
     <title>Gestió de Tasques</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var altaPrioritat = document.getElementById('alta-prioritat');
-            var baixaPrioritat = document.getElementById('baixa-prioritat');
-
-            new Sortable(altaPrioritat, {
-                animation: 150,
-                onEnd: function (evt) {
-                    updateTaskOrder('alta');
-                }
-            });
-
-            new Sortable(baixaPrioritat, {
-                animation: 150,
-                onEnd: function (evt) {
-                    updateTaskOrder('baixa');
-                }
-            });
-
-            function updateTaskOrder(priority) {
-                var order = [];
-                var tasks = document.querySelectorAll('#' + priority + '-prioritat .tasca');
-                tasks.forEach(function (task, index) {
-                    order.push({
-                        id: task.getAttribute('data-id'),
-                        ordre: index + 1
-                    });
-                });
-
-                fetch('/update_task_order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ order: order })
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          console.log('Order updated successfully');
-                      }
-                  });
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -94,7 +51,8 @@
                             <p>{{ tasca.description }}</p>
                             <p><strong>Prioritat:</strong> {{ tasca.priority }}</p>
                             <p><strong>Estat:</strong> {% if tasca.completed %}Completada{% else %}Pendent{% endif %}</p>
-                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }} {{ tasca.due_time }}</p>
+                            <p><strong>Temps de recordatori:</strong> {{ tasca.reminder_time }} minuts abans</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -124,7 +82,8 @@
                             <p>{{ tasca.description }}</p>
                             <p><strong>Prioritat:</strong> {{ tasca.priority }}</p>
                             <p><strong>Estat:</strong> {% if tasca.completed %}Completada{% else %}Pendent{% endif %}</p>
-                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }}</p>
+                            <p><strong>Data de finalització:</strong> {{ tasca.due_date }} {{ tasca.due_time }}</p>
+                            <p><strong>Temps de recordatori:</strong> {{ tasca.reminder_time }} minuts abans</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -135,6 +94,5 @@
             <p>© 2025 Grup 3</p>
         </footer>
     </div>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

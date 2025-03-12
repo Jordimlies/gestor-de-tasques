@@ -23,6 +23,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+        email = request.form['email']
 
         if password != confirm_password:
             flash('Passwords do not match!', 'danger')
@@ -33,7 +34,7 @@ def register():
             flash('Username already exists!', 'danger')
             return redirect(url_for('routes.register'))
 
-        new_user = User(username, password)
+        new_user = User(username, password, email)
         users.append(new_user)
         User.save_users(USERS_FILE, users)
         flash('Registration successful!', 'success')
@@ -73,11 +74,13 @@ def afegir_tasca():
         description = request.form['descripcio']
         priority = request.form['tipus']
         due_date = request.form['data_finalitzacio']
+        due_time = request.form['hora_finalitzacio']
+        reminder_time = request.form['temps_recordatori']
         username = session['username']
 
         tasks = Task.load_tasks(TASKS_FILE)
         ordre = len(tasks) + 1
-        new_task = Task(str(uuid.uuid4()), name, description, priority, due_date, username, ordre)
+        new_task = Task(str(uuid.uuid4()), name, description, priority, due_date, due_time, username, ordre, reminder_time)
         tasks.append(new_task)
         Task.save_tasks(TASKS_FILE, tasks)
         return redirect(url_for('routes.index'))
@@ -99,6 +102,8 @@ def editar_tasca(id):
         task.description = request.form['descripcio']
         task.priority = request.form['tipus']
         task.due_date = request.form['data_finalitzacio']
+        task.due_time = request.form['hora_finalitzacio']
+        task.reminder_time = request.form['temps_recordatori']
         Task.save_tasks(TASKS_FILE, tasks)
         return redirect(url_for('routes.index'))
 

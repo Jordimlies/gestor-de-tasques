@@ -10,7 +10,7 @@ body {
     justify-content: flex-start; /* Col·locar els elements a la part superior */
     align-items: center; /* Centrar els elements horitzontalment */
     height: 100vh; /* Ocupar tota la finestra */
-    overflow-y: auto; /* Permetre desplaçar-se si el contingut és massa gran */
+    overflow: hidden; /* Evitar desplaçament vertical */
 }
 
 /* Contenidor de la pàgina */
@@ -20,6 +20,9 @@ body {
     padding: 20px;
     box-sizing: border-box;
     overflow: hidden; /* Evitar que els elements surtin de la finestra */
+    flex-grow: 1; /* Permetre que el contenidor creixi per ocupar l'espai disponible */
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -61,6 +64,7 @@ main {
     width: 100%; /* Garantir que ocupa tot l'espai disponible */
     box-sizing: border-box;
     overflow-y: auto; /* Permetre desplaçament si el contingut és massa gran */
+    flex-grow: 1; /* Permetre que el main creixi per ocupar l'espai disponible */
 }
 
 h2 {

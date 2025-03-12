@@ -4,52 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Afegir Tasca</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/afegir.css') }}">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="logo">
-                <h1>Afegir Tasca</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Inici</a></li>
-                    <li><a href="/afegir_tasca">Afegir Tasca</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
-            </nav>
+        <header>
+            <h1>Afegir Tasca</h1>
         </header>
-        
         <main>
-            <h2>Afegir Tasca</h2>
-            <form action="{{ url_for('routes.afegir_tasca') }}" method="POST">
+            <form method="POST" action="">
                 <div class="form-group">
-                    <label for="nom">Nom:</label>
-                    <input type="text" id="nom" name="nom" required>
+                    <label for="nom">Nom</label><br>
+                    <input type="text" id="nom" name="nom" size="32" required><br>
                 </div>
                 <div class="form-group">
-                    <label for="descripcio">Descripció:</label>
-                    <textarea id="descripcio" name="descripcio" required></textarea>
+                    <label for="descripcio">Descripció</label><br>
+                    <textarea id="descripcio" name="descripcio" rows="4" cols="50" required></textarea><br>
                 </div>
                 <div class="form-group">
-                    <label for="tipus">Prioritat:</label>
+                    <label for="tipus">Prioritat</label><br>
                     <select id="tipus" name="tipus" required>
                         <option value="alta">Alta</option>
                         <option value="baixa">Baixa</option>
-                    </select>
+                    </select><br>
                 </div>
                 <div class="form-group">
-                    <label for="data_finalitzacio">Data de finalització:</label>
-                    <input type="date" id="data_finalitzacio" name="data_finalitzacio" required>
+                    <label for="data_finalitzacio">Data de finalització</label><br>
+                    <input type="date" id="data_finalitzacio" name="data_finalitzacio" required><br>
                 </div>
-                <button type="submit" class="btn btn-submit">Afegir Tasca</button>
+                <div class="form-group">
+                    <label for="hora_finalitzacio">Hora de finalització</label><br>
+                    <input type="time" id="hora_finalitzacio" name="hora_finalitzacio" required><br>
+                </div>
+                <div class="form-group">
+                    <label for="temps_recordatori">Temps de recordatori</label><br>
+                    <select id="temps_recordatori" name="temps_recordatori" required>
+                        <option value="60">1 hora abans</option>
+                        <option value="1440">1 dia abans</option>
+                        <option value="10080">1 setmana abans</option>
+                    </select><br>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Afegir Tasca</button>
+                </div>
             </form>
         </main>
-
-        <footer>
-            <p>© 2025 Grup 3</p>
-        </footer>
     </div>
 </body>
 </html>
