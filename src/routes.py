@@ -89,26 +89,20 @@ def afegir_tasca():
 
 @routes.route('/editar_tasca/<id>', methods=['GET', 'POST'])
 def editar_tasca(id):
-    if 'username' not in session:
-        return redirect(url_for('routes.login'))
-    tasks = Task.load_tasks(TASKS_FILE)
-    task = next((task for task in tasks if task.id == id and task.username == session['username']), None)
-    if task is None:
-        flash('Task not found or you do not have permission to edit it.', 'danger')
-        return redirect(url_for('routes.index'))
-
+    tasks = Task.load_tasks('data/tasks.json')
+    task = next((t for t in tasks if t.id == id), None)
+    
     if request.method == 'POST':
         task.name = request.form['nom']
         task.description = request.form['descripcio']
-        task.priority = request.form['tipus']
-        task.due_date = request.form['data_finalitzacio']
-        task.due_time = request.form['hora_finalitzacio']
-        task.reminder_time = request.form['temps_recordatori']
-        Task.save_tasks(TASKS_FILE, tasks)
+        task.priority = request.form['prioritat']
+        task.due_date = request.form['data_venciment']
+        task.due_time = request.form['hora_venciment']
+        task.reminder_time = int(request.form['temps_recordatori'])
+        Task.save_tasks('data/tasks.json', tasks)
         return redirect(url_for('routes.index'))
-
-    return render_template('editar_tasca.html', task=task)
-
+    
+    return render_template('editar_tasca.html', tasca=task)
 @routes.route('/eliminar_tasca/<id>', methods=['POST'])
 def eliminar_tasca(id):
     if 'username' not in session:

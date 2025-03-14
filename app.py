@@ -4,6 +4,8 @@ import threading
 import time
 import schedule
 from src.usuari import revisar_tasques
+import signal
+import sys
 
 app = Flask(__name__)
 app.secret_key = 'Paraula_random_wewn'
@@ -21,10 +23,13 @@ def run_scheduler():
 scheduler_thread = threading.Thread(target=run_scheduler)
 scheduler_thread.start()
 
-try:
-    app.run(debug=True)
-except KeyboardInterrupt:
+def signal_handler(sig, frame):
     print("Aturant el programa...")
     stop_thread.set()
     scheduler_thread.join()
     print("Programa aturat.")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+app.run(debug=True)

@@ -1,52 +1,28 @@
 # Gestor de Tasques
 
-Aquest projecte és una aplicació web per gestionar tasques amb diferents prioritats. Utilitza Flask com a framework web i JSON per a la gestió de les dades. També inclou funcionalitats per afegir, editar, eliminar i completar tasques.
+Aquest projecte és una aplicació web per gestionar tasques, desenvolupada amb Flask i Python. Permet als usuaris afegir, editar, eliminar i veure tasques, així com rebre recordatoris per correu electrònic.
 
-## Requisits
+## Funcionalitats
 
-- Python 3.x
-- Flask
-
-## Instal·lació
-
-1. Clona aquest repositori al teu ordinador:
-
-    ```bash
-    git clone https://github.com/Jordimlies/gestor-de-tasques.git
-    cd gestor-de-tasques
-    ```
-
-2. Crea un entorn virtual i activa'l:
-
-    ```bash
-    python -m venv env
-    source env/bin/activate  # Per a Unix/Mac
-    .\env\Scripts\activate  # Per a Windows
-    ```
-
-3. Instal·la les dependències:
-
-    ```bash
-    pip install -r config/requirements.txt
-    ```
-
-4. Executa l'aplicació:
-
-    ```bash
-    python app.py
-    ```
+- **Afegir Tasques**: Els usuaris poden afegir noves tasques amb informació com el nom, descripció, prioritat, data i hora de venciment, i temps de recordatori.
+- **Editar Tasques**: Els usuaris poden editar les tasques existents.
+- **Eliminar Tasques**: Els usuaris poden eliminar les tasques que ja no necessiten.
+- **Veure Tasques**: Els usuaris poden veure una llista de totes les tasques pendents i completades.
+- **Recordatoris per Correu Electrònic**: Els usuaris reben recordatoris per correu electrònic abans de la data de venciment de les tasques.
 
 ## Estructura del Projecte
 
 ```
 gestor-de-tasques/
-│
+├── .gitignore
 ├── app.py
+├── readme.md
 ├── config/
+│   ├── .env
 │   └── requirements.txt
 ├── data/
-│   ├── prioritat_alta.json
-│   └── prioritat_baixa.json
+│   ├── tasks.json
+│   └── users.json
 ├── src/
 │   ├── __init__.py
 │   ├── routes.py
@@ -55,52 +31,60 @@ gestor-de-tasques/
 │   ├── css/
 │   │   ├── afegir.css
 │   │   ├── edit.css
-│   │   └── index.css
+│   │   ├── index.css
+│   │   ├── login.css
+│   │   └── register.css
 │   └── js/
 │       └── index.js
 └── templates/
     ├── afegir_tasca.html
     ├── editar_tasca.html
-    └── index.html
+    ├── index.html
+    ├── login.html
+    └── register.html
 ```
 
-### `app.py`
+## Configuració
 
-Aquest fitxer és el punt d'entrada de l'aplicació. Configura Flask i registra el blueprint de les rutes.
+### 1. Instal·lació de Dependències
 
-### `src/routes.py`
+Instal·la les dependències necessàries utilitzant `pip`:
 
-Defineix les rutes de l'aplicació:
+```bash
+pip install -r config/requirements.txt
+```
 
-- **`/`**: Mostra totes les tasques.
-- **`/afegir_tasca`**: Permet afegir una nova tasca.
-- **`/editar/<int:id>/<prioritat>`**: Permet editar una tasca existent.
-- **`/eliminar/<int:id>/<prioritat>`**: Permet eliminar una tasca.
-- **`/completar_tasca/<int:id>/<prioritat>`**: Marca una tasca com a completada.
-- **`/update_task_order`**: Actualitza l'ordre de les tasques.
+### 2. Configuració de l'Entorn
 
-### `src/tasques.py`
+Crea un fitxer `.env` a la carpeta `config/` amb les següents variables d'entorn:
 
-Defineix les classes de tasques i les funcions per carregar i desar tasques des de i cap a fitxers JSON.
+```
+EMAIL_USER=el_teu_email@gmail.com
+EMAIL_PASS=la_teva_contrasenya
+```
 
-### `templates/`
+### 3. Executar l'Aplicació
 
-Conté les plantilles HTML per a les diferents pàgines de l'aplicació.
+Per executar l'aplicació, utilitza el següent comandament:
 
-### `static/css/`
+```bash
+python app.py
+```
 
-Conté els fitxers CSS per estilitzar les pàgines HTML.
+## Ús
 
-### `static/js/index.js`
+### Afegir Tasques
 
-Conté el codi JavaScript per gestionar l'ordre de les tasques utilitzant la llibreria Sortable.
+Per afegir una nova tasca, ves a la pàgina `/afegir_tasca` i omple el formulari amb la informació de la tasca.
 
-## Funcionalitats
+### Editar Tasques
 
-### Gestió de Tasques
+Per editar una tasca existent, ves a la pàgina `/editar_tasca/<id>` on `<id>` és l'identificador de la tasca que vols editar.
 
-Els usuaris poden afegir, editar, eliminar i marcar tasques com a completades. Les tasques es poden classificar en alta i baixa prioritat. També es pot especificar una data de finalització per a cada tasca.
+### Eliminar Tasques
 
-### Actualització de l'Ordre de les Tasques
+Per eliminar una tasca, fes clic al botó d'eliminar al costat de la tasca que vols eliminar a la pàgina principal.
 
-L'aplicació permet actualitzar l'ordre de les tasques mitjançant una sol·licitud POST amb dades JSON.
+### Veure Tasques
+
+Per veure la llista de totes les tasques, ves a la pàgina principal `/`.

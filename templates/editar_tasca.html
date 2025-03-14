@@ -12,43 +12,29 @@
             <h1>Editar Tasca</h1>
         </header>
         <main>
-            <form method="POST" action="">
-                <div class="form-group">
-                    <label for="nom">Nom</label><br>
-                    <input type="text" id="nom" name="nom" value="{{ tasca.name }}" required><br>
-                </div>
-                <div class="form-group">
-                    <label for="descripcio">Descripció</label><br>
-                    <textarea id="descripcio" name="descripcio" required>{{ tasca.description }}</textarea><br>
-                </div>
-                <div class="form-group">
-                    <label for="tipus">Prioritat</label><br>
-                    <select id="tipus" name="tipus" required>
-                        <option value="alta" {% if tasca.priority == 'alta' %}selected{% endif %}>Alta</option>
-                        <option value="baixa" {% if tasca.priority == 'baixa' %}selected{% endif %}>Baixa</option>
-                    </select><br>
-                </div>
-                <div class="form-group">
-                    <label for="data_finalitzacio">Data de Finalització</label><br>
-                    <input type="date" id="data_finalitzacio" name="data_finalitzacio" value="{{ tasca.due_date }}" required><br>
-                </div>
-                <div class="form-group">
-                    <label for="hora_finalitzacio">Hora de Finalització</label><br>
-                    <input type="time" id="hora_finalitzacio" name="hora_finalitzacio" value="{{ tasca.due_time }}" required><br>
-                </div>
-                <div class="form-group">
-                    <label for="temps_recordatori">Temps de Recordatori</label><br>
-                    <select id="temps_recordatori" name="temps_recordatori" required>
-                        <option value="5" {% if tasca.reminder_time == 5 %}selected{% endif %}>5 minuts abans</option>
-                        <option value="10" {% if tasca.reminder_time == 10 %}selected{% endif %}>10 minuts abans</option>
-                        <option value="30" {% if tasca.reminder_time == 30 %}selected{% endif %}>30 minuts abans</option>
-                        <option value="60" {% if tasca.reminder_time == 60 %}selected{% endif %}>1 hora abans</option>
-                        <option value="1440" {% if tasca.reminder_time == 1440 %}selected{% endif %}>1 dia abans</option>
-                    </select><br>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn-submit">Guardar Canvis</button>
-                </div>
+            <form action="{{ url_for('routes.editar_tasca', id=tasca.id) }}" method="POST">
+                <label for="nom">Nom:</label>
+                <input type="text" id="nom" name="nom" value="{{ tasca.name }}" required><br>
+
+                <label for="descripcio">Descripció:</label>
+                <textarea id="descripcio" name="descripcio" required>{{ tasca.description }}</textarea><br>
+
+                <label for="prioritat">Prioritat:</label>
+                <select id="prioritat" name="prioritat" required>
+                    <option value="alta" {% if tasca.priority == 'alta' %}selected{% endif %}>Alta</option>
+                    <option value="baixa" {% if tasca.priority == 'baixa' %}selected{% endif %}>Baixa</option>
+                </select><br>
+
+                <label for="data_venciment">Data de Venciment:</label>
+                <input type="date" id="data_venciment" name="data_venciment" value="{{ tasca.due_date }}" required><br>
+
+                <label for="hora_venciment">Hora de Venciment:</label>
+                <input type="time" id="hora_venciment" name="hora_venciment" value="{{ tasca.due_time }}" required><br>
+
+                <label for="temps_recordatori">Temps de Recordatori (minuts):</label>
+                <input type="number" id="temps_recordatori" name="temps_recordatori" value="{{ tasca.reminder_time }}" required><br>
+
+                <button type="submit">Guardar Canvis</button>
             </form>
         </main>
     </div>
