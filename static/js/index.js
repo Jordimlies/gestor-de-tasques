@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tasks.forEach(function (task, index) {
             order.push({
                 id: task.getAttribute('data-id'),
-                new_order: index + 1
+                ordre: index + 1
             });
         });
 
