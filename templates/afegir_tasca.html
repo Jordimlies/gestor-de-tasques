@@ -12,41 +12,35 @@
             <h1>Afegir Tasca</h1>
         </header>
         <main>
-            <form method="POST" action="">
+            <form action="{{ url_for('routes.afegir_tasca') }}" method="POST">
                 <div class="form-group">
-                    <label for="nom">Nom</label><br>
-                    <input type="text" id="nom" name="nom" size="32" required><br>
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" required>
                 </div>
                 <div class="form-group">
-                    <label for="descripcio">Descripció</label><br>
-                    <textarea id="descripcio" name="descripcio" rows="4" cols="50" required></textarea><br>
+                    <label for="descripcio">Descripció:</label>
+                    <textarea id="descripcio" name="descripcio" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="tipus">Prioritat</label><br>
-                    <select id="tipus" name="tipus" required>
+                    <label for="prioritat">Prioritat:</label>
+                    <select id="prioritat" name="prioritat" required>
                         <option value="alta">Alta</option>
                         <option value="baixa">Baixa</option>
-                    </select><br>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="data_finalitzacio">Data de finalització</label><br>
-                    <input type="date" id="data_finalitzacio" name="data_finalitzacio" required><br>
+                    <label for="data_venciment">Data de Venciment:</label>
+                    <input type="date" id="data_venciment" name="data_venciment" required>
                 </div>
                 <div class="form-group">
-                    <label for="hora_finalitzacio">Hora de finalització</label><br>
-                    <input type="time" id="hora_finalitzacio" name="hora_finalitzacio" required><br>
+                    <label for="hora_venciment">Hora de Venciment:</label>
+                    <input type="time" id="hora_venciment" name="hora_venciment" required>
                 </div>
                 <div class="form-group">
-                    <label for="temps_recordatori">Temps de recordatori</label><br>
-                    <select id="temps_recordatori" name="temps_recordatori" required>
-                        <option value="60">1 hora abans</option>
-                        <option value="1440">1 dia abans</option>
-                        <option value="10080">1 setmana abans</option>
-                    </select><br>
+                    <label for="temps_recordatori">Temps de Recordatori (minuts):</label>
+                    <input type="number" id="temps_recordatori" name="temps_recordatori" required>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn-submit">Afegir Tasca</button>
-                </div>
+                <button type="submit">Afegir Tasca</button>
             </form>
         </main>
     </div>

@@ -1,111 +1,109 @@
-/* styles.css */
-
-/* Reset de marges i padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* General styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #181818;
-    color: #fff;
-    padding: 20px;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* Estils per a tots els botons */
-.btn {
-    background-color: #9146FF;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.btn:hover {
-    background-color: #7c3aeb;
-}
-
-/* Estructura de la pàgina */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-header {
+    background-color: #181818; /* Color de fons fosc */
+    margin: 0;
+    padding: 0;
+    color: #e0e0e0; /* Color de text clar */
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
+    height: 100vh;
 }
 
-header .logo h1 {
-    color: #9146FF;
-}
-
-nav ul {
-    list-style: none;
+/* Contenidor de la pàgina */
+.container {
+    max-width: 800px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #2f2f2f; /* Fons gris fosc per al contenidor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra suau */
+    border-radius: 10px; /* Cantonades arrodonides */
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
 }
 
-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-nav a:hover {
-    color: #9146FF;
-}
-
-footer {
+/* Header */
+header {
+    width: 100%;
     text-align: center;
-    margin-top: 30px;
-    font-size: 14px;
+    margin-bottom: 20px;
 }
 
-/* Formulari */
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #6441a5; /* Color morat */
+}
+
+/* Main form */
+main {
+    width: 100%;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .form-group {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
     margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    color: #e0e0e0; /* Color de text clar */
+    margin-bottom: 5px;
 }
 
 input, textarea, select {
     width: 100%;
     padding: 10px;
+    border: 1px solid #444; /* Bordes gris fosc */
     border-radius: 5px;
-    border: 1px solid #333;
-    background-color: #282828;
-    color: #fff;
-    font-size: 16px;
+    font-size: 14px;
+    background-color: #333; /* Fons gris fosc clar per als inputs */
+    color: #e0e0e0; /* Color de text clar */
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #6441a5; /* Color morat */
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 65, 165, 0.5); /* Ombra morada */
 }
 
 textarea {
-    height: 150px;
     resize: vertical;
+    min-height: 100px;
 }
 
 button {
-    background-color: #9146FF;
-    color: #fff;
+    background-color: #6441a5; /* Color morat */
+    color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 20px;
     font-size: 16px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
 }
 
 button:hover {
-    background-color: #7c3aeb;
+    background-color: #532f8e; /* Color morat més fosc */
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 65, 165, 0.5); /* Ombra morada */
 }

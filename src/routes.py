@@ -67,24 +67,30 @@ def logout():
 
 @routes.route('/afegir_tasca', methods=['GET', 'POST'])
 def afegir_tasca():
-    if 'username' not in session:
-        return redirect(url_for('routes.login'))
     if request.method == 'POST':
-        name = request.form['nom']
-        description = request.form['descripcio']
-        priority = request.form['tipus']
-        due_date = request.form['data_finalitzacio']
-        due_time = request.form['hora_finalitzacio']
-        reminder_time = request.form['temps_recordatori']
-        username = session['username']
-
-        tasks = Task.load_tasks(TASKS_FILE)
-        ordre = len(tasks) + 1
-        new_task = Task(str(uuid.uuid4()), name, description, priority, due_date, due_time, username, ordre, reminder_time)
-        tasks.append(new_task)
-        Task.save_tasks(TASKS_FILE, tasks)
+        nom = request.form['nom']
+        descripcio = request.form['descripcio']
+        prioritat = request.form['prioritat']  # Canviat de 'tipus' a 'prioritat'
+        data_venciment = request.form['data_venciment']
+        hora_venciment = request.form['hora_venciment']
+        temps_recordatori = int(request.form['temps_recordatori'])
+        
+        tasques = Task.load_tasks(TASKS_FILE)
+        nova_tasca = Task(
+            id=str(len(tasques) + 1),
+            name=nom,
+            description=descripcio,
+            priority=prioritat,
+            due_date=data_venciment,
+            due_time=hora_venciment,
+            username=session['username'],
+            ordre=len(tasques) + 1,
+            reminder_time=temps_recordatori
+        )
+        tasques.append(nova_tasca)
+        Task.save_tasks(TASKS_FILE, tasques)
         return redirect(url_for('routes.index'))
-
+    
     return render_template('afegir_tasca.html')
 
 @routes.route('/editar_tasca/<id>', methods=['GET', 'POST'])

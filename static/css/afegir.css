@@ -1,126 +1,109 @@
 /* General styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #181818; /* Color fosc de fons */
+    background-color: #181818; /* Color de fons fosc */
     margin: 0;
     padding: 0;
-    color: #e0e0e0; /* Text clar per contrastar amb el fons fosc */
+    color: #e0e0e0; /* Color de text clar */
     display: flex;
-    flex-direction: column; /* Apilar els elements verticalment */
-    justify-content: flex-start; /* Col·locar els elements a la part superior */
-    align-items: center; /* Centrar els elements horitzontalment */
-    height: 100vh; /* Ocupar tota la finestra */
-    overflow: hidden; /* Evitar desplaçament vertical */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 /* Contenidor de la pàgina */
 .container {
-    max-width: 800px; /* Amplada màxima per als elements */
-    width: 100%; /* Fer que ocupi tot l'espai disponible */
+    max-width: 800px;
+    width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    overflow: hidden; /* Evitar que els elements surtin de la finestra */
-    flex-grow: 1; /* Permetre que el contenidor creixi per ocupar l'espai disponible */
+    background-color: #2f2f2f; /* Fons gris fosc per al contenidor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra suau */
+    border-radius: 10px; /* Cantonades arrodonides */
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
+/* Header */
 header {
-    background-color: #6441a5; /* Color fosc característic (fosc amb un toc de morat) */
-    padding: 5px 5px; /* Menys padding per fer el header més petit */
-    color: white;
+    width: 100%;
     text-align: center;
-    border-radius: 10px;
-    flex-shrink: 0; /* Evitar que el header es redueixi en mides petites */
+    margin-bottom: 20px;
 }
 
-header .logo h1 {
+header h1 {
     margin: 0;
-    font-size: 28px; /* Mida de font ajustada */
+    font-size: 24px;
+    color: #6441a5; /* Color morat */
 }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
+/* Main form */
 main {
-    background-color: #2f2f2f; /* Fons fosc per la secció principal */
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    border-radius: 10px;
-    width: 100%; /* Garantir que ocupa tot l'espai disponible */
-    box-sizing: border-box;
-    overflow-y: auto; /* Permetre desplaçament si el contingut és massa gran */
-    flex-grow: 1; /* Permetre que el main creixi per ocupar l'espai disponible */
+    width: 100%;
 }
 
-h2 {
-    color: #f0f0f0; /* Títol clar */
-    font-size: 28px;
-    margin-bottom: 10px;
+form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .form-group {
-    margin-bottom: 20px; /* Augmentar l'espai entre els camps */
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
 label {
-    display: block;
-    font-size: 16px;
-    color: #f0f0f0; /* Color clar per als labels */
+    font-size: 14px;
+    color: #e0e0e0; /* Color de text clar */
     margin-bottom: 5px;
 }
 
 input, textarea, select {
     width: 100%;
-    padding: 12px; /* Augmentar el padding per a més espai */
-    border: 1px solid #444; /* Bordes gris fosc per contrastar amb el fons */
+    padding: 10px;
+    border: 1px solid #444; /* Bordes gris fosc */
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     background-color: #333; /* Fons gris fosc clar per als inputs */
-    color: #e0e0e0; /* Text clar */
+    color: #e0e0e0; /* Color de text clar */
     box-sizing: border-box;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #6441a5; /* Color morat */
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 65, 165, 0.5); /* Ombra morada */
 }
 
 textarea {
-    height: 150px; /* Augmentar l'altura de la caixa de text */
+    resize: vertical;
+    min-height: 100px;
 }
 
-button.btn-submit {
-    background-color: #6441a5; /* Morat fosc per als botons */
+button {
+    background-color: #6441a5; /* Color morat */
     color: white;
     border: none;
-    padding: 12px 24px; /* Augmentar el padding per fer més gran el botó */
+    padding: 12px 20px;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%; /* Fer que el botó ocupi tota l'amplada */
-}
-
-button.btn-submit:hover {
-    background-color: #532f8e; /* Morat més clar quan passa el ratolí per sobre */
-}
-
-footer {
-    text-align: center;
-    background-color: #6441a5; /* Peu de pàgina morat fosc */
-    color: white;
-    margin-top: 20px;
-    border-radius: 10px;
+    transition: background-color 0.3s ease;
     width: 100%;
-    box-sizing: border-box;
-    flex-shrink: 0; /* Evitar que el footer es redueixi en mides petites */
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #532f8e; /* Color morat més fosc */
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 65, 165, 0.5); /* Ombra morada */
 }
