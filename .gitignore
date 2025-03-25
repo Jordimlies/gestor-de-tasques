@@ -2,3 +2,8 @@ src/__pycache__
 data/tasks.json
 data/users.json
 config/.env
+build
+app.spec
+dockerfile
+dist
+.DS_Store
